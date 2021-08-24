@@ -1,8 +1,12 @@
 package com.isaac.controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
 @Log4j
@@ -60,12 +65,24 @@ public class UploadController {
 			// IE has file path
 			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
 			log.info("only file name : " + uploadFileName);
-		
-			//File savefile = new File(uploadFolder, uploadFileName);
-			File savefile = new File(uploadPath, uploadFileName);
 			
+			UUID uuid = UUID.randomUUID();
+			uploadFileName = uuid.toString() + "_" + uploadFileName;
+
 			try {
-				multipartFile.transferTo(savefile);
+				//File savefile = new File(uploadFolder, uploadFileName);
+				File saveFile = new File(uploadPath, uploadFileName);
+				
+				multipartFile.transferTo(saveFile);
+				
+				// check image type file
+				if (checkImageType(saveFile)) {
+					FileOutputStream thumbnail = new FileOutputStream( 
+									new File(uploadPath, "s_"+uploadFileName) );
+					Thumbnailator
+					.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
+				}
+				
 			} catch (Exception e) {
 				log.error(e.getMessage());
 			} // end catch
@@ -79,5 +96,13 @@ public class UploadController {
 		return str.replace("-", File.separator);
 	}
 	
-	
+	private boolean checkImageType(File file) {
+		try {
+			String contentType = Files.probeContentType(file.toPath());
+			return contentType.startsWith("image");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
