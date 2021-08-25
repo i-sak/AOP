@@ -5,12 +5,24 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+img {
+	width : 50px;
+	height : 50px;
+}
+</style>
 </head>
 <body>
 <h1>upload with ajax</h1>
 
 <div class="uploadDiv">
 	<input type="file" name="uploadFile" multiple>
+</div>
+
+<div class="uploadResult">
+	<ul>
+	
+	</ul>
 </div>
 
 <button id="uploadBtn">Upload</button>
@@ -20,7 +32,7 @@
 $(document).ready(function() {
 	var regex = new RegExp("(.*?)\.(exe|sh|js|alz)$"); // regular expression
 	var maxSize = 5242880; // 5MB
-	
+	// file check
 	function checkExtension(fileName, fileSize) {
 		if(fileSize >= maxSize) {
 			alert("파일 사이즈 초과");
@@ -33,6 +45,8 @@ $(document).ready(function() {
 		return true;
 	}
 	
+	var cloneOjb = $(".uploadDiv").clone();
+	// upload button
 	$("#uploadBtn").on("click", function(e){
 		var formData = new FormData();
 		var inputFile = $("input[name='uploadFile']");
@@ -48,7 +62,7 @@ $(document).ready(function() {
 		}
 		
 		$.ajax({
-			url : '/controller/uploadAjaxAction',
+			url : '/uploadAjaxAction',
 			processData : false,
 			contentType : false,
 			data : formData,
@@ -56,9 +70,31 @@ $(document).ready(function() {
 			dataType:'json',
 			success : function(result) {
 				console.log(result);
+				
+				$(".uploadDiv").html(cloneOjb.html());
+				
+				showUploadFile(result);
 			}
 		});
 	});
+	
+	// result 처리
+	var uploadResult = $(".uploadResult ul");
+	
+	function showUploadFile(uploadResultArr) {
+		var str = "";
+		$(uploadResultArr).each(function(i, obj) {
+			if(!obj.image) {
+				str += "<li><img src='/resources/img/attach.png'>"
+				 	+ obj.fileName + "</li>";	
+			} else {
+				str += "<li>" + obj.fileName + "</li>";	
+			}
+		});
+		uploadResult.append(str);
+	}
+	
+	
 });
 </script>
 
