@@ -27,6 +27,9 @@ img {
 
 <button id="uploadBtn">Upload</button>
 
+<div class="oImg">
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
@@ -92,14 +95,26 @@ $(document).ready(function() {
 				//str += "<li>" + obj.fileName + "</li>";
 				var fileCellPath = encodeURIComponent(obj.uploadPath + 
 						"/s_"+obj.uuid+"_"+obj.fileName);
-				str += "<li><img src='/display?fileName="+fileCellPath+"'></li>";
+				var originPath = obj.uploadPath+"\\"+obj.uuid+"_"+obj.fileName;
+				originPath = originPath.replace(new RegExp(/\\/g), "/");
+				
+				str += "<li><a "
+					+"href='javascript:showImage(\""+originPath+"\")'>"
+					+"<img src='/display?fileName="+fileCellPath+"'></a></li>";
 			}
 		});
 		uploadResult.append(str);
 	}
-	
-	
 });
+
+// 원본 이미지를 보여줄 <div> 처리
+function showImage(fileCallPath) {
+	alert(fileCallPath);
+	$(".oImg").html("<img src='/display?fileName="+ encodeURI(fileCallPath)  
+		+"' style='width:600px; height:600px' >" );
+	
+}
+
 </script>
 
 </body>
