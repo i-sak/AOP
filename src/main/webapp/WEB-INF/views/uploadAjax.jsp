@@ -89,8 +89,12 @@ $(document).ready(function() {
 		$(uploadResultArr).each(function(i, obj) {
 			if(!obj.image) {
 				var fileCellPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);
+				
+				var fileLink = fileCellPath.replace(new RegExp(/\\/g), "/"); // 추가
+				
 				str += "<li><a href='/download?fileName="+fileCellPath+"'>"
-					+  "<img src='/resources/img/attach.png'>" + obj.fileName + "</a></li>";
+					+  "<img src='/resources/img/attach.png'>" + obj.fileName + "</a>"
+					+  "<span data-file=\'"+ fileCellPath+"\' data-type='file'> X </span></li>";
 			} else {
 				//str += "<li>" + obj.fileName + "</li>";
 				var fileCellPath = encodeURIComponent(obj.uploadPath + 
@@ -100,11 +104,29 @@ $(document).ready(function() {
 				
 				str += "<li><a "
 					+"href='javascript:showImage(\""+originPath+"\")'>"
-					+"<img src='/display?fileName="+fileCellPath+"'></a></li>";
+					+"<img src='/display?fileName="+fileCellPath+"'></a>"
+					+"<span data-file=\'"+fileCellPath+"\' data-type='image'> X </span></li>";
 			}
 		});
 		uploadResult.append(str);
 	}
+	
+	// file delete 
+	$(".uploadResult").on("click", "span", function(e) {
+		alert("1");
+		var targetFile = $(this).data("file");
+		var type = $(this).data("type");
+		
+		$.ajax({
+			url : '/deleteFile',
+			data : {fileName: targetFile, type : type},
+			dataType : 'text',
+			type : 'POST',
+			success : function(result) {
+				alert(result);	
+			}
+		});
+	});
 });
 
 // 원본 이미지를 보여줄 <div> 처리
