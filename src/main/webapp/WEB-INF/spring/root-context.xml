@@ -22,7 +22,7 @@
 		<property name="driverClassName"
 			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
 		<property name="jdbcUrl"
-			value="jdbc:log4jdbc:mariadb://ip:port/db"></property>
+				value="jdbc:log4jdbc:mariadb://ip:port/db"></property>
     	<property name="username" value=""></property>
     	<property name="password" value=""></property>
 	</bean>
@@ -48,6 +48,7 @@
 	<mybatis-spring:scan base-package="com.isaac.mapper"/>
 	<context:component-scan base-package="com.isaac.service"></context:component-scan>
 	<context:component-scan base-package="com.isaac.aop"></context:component-scan>
+	<context:component-scan base-package="com.isaac.task"></context:component-scan>
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	
 </beans>
