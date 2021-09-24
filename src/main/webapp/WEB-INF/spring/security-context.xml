@@ -6,13 +6,17 @@
 	 http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans
 		 http://www.springframework.org/schema/beans/spring-beans.xsd">
-
+	
+	<bean id="customAccessDenied" class="com.isaac.security.CustomAccessDeniedHandler"></bean>
+	
 	<security:http auto-config="true" use-expressions="true">
 		<security:intercept-url pattern="/sample/all" access="permitAll"/>
 		<security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"/>
 		<security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
-		<security:form-login/>
-		<security:access-denied-handler error-page="/accessError"/>
+		<!-- <security:access-denied-handler error-page="/accessError"/>  -->
+		<security:access-denied-handler ref="customAccessDenied"/>
+		<!-- <security:form-login/>  -->
+		<security:form-login login-page="/customLogin"/>
 	</security:http>
 	
 	<security:authentication-manager>
