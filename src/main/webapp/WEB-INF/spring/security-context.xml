@@ -8,7 +8,7 @@
 		 http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<bean id="customAccessDenied" class="com.isaac.security.CustomAccessDeniedHandler"></bean>
-	
+	<bean id="customLoginSuccess" class="com.isaac.security.CustomLoginSuccessHandler"></bean>
 	<security:http auto-config="true" use-expressions="true">
 		<security:intercept-url pattern="/sample/all" access="permitAll"/>
 		<security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"/>
@@ -16,7 +16,10 @@
 		<!-- <security:access-denied-handler error-page="/accessError"/>  -->
 		<security:access-denied-handler ref="customAccessDenied"/>
 		<!-- <security:form-login/>  -->
-		<security:form-login login-page="/customLogin"/>
+		<security:form-login login-page="/customLogin" 
+			authentication-success-handler-ref="customLoginSuccess"/>
+		<!-- <security:csrf disabled="true"/>  -->
+		<security:logout logout-url="/customLogout" invalidate-session="true"/>
 	</security:http>
 	
 	<security:authentication-manager>
@@ -27,5 +30,6 @@
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>
-
+	
+	
 </beans>
