@@ -9,6 +9,8 @@
 	
 	<bean id="customAccessDenied" class="com.isaac.security.CustomAccessDeniedHandler"></bean>
 	<bean id="customLoginSuccess" class="com.isaac.security.CustomLoginSuccessHandler"></bean>
+	<bean id="customPasswordEncoder" class="com.isaac.security.CustomNoOpPasswordEncoder"></bean>
+	
 	<security:http auto-config="true" use-expressions="true">
 		<security:intercept-url pattern="/sample/all" access="permitAll"/>
 		<security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"/>
@@ -24,11 +26,17 @@
 	
 	<security:authentication-manager>
 		<security:authentication-provider>
+			<security:jdbc-user-service data-source-ref="dataSource"/>
+			<security:password-encoder ref="customPasswordEncoder"/>
+		</security:authentication-provider>
+	<!-- 
+		<security:authentication-provider>
 			<security:user-service>
 				<security:user name="member" password="{noop}member" authorities="ROLE_MEMBER"/>
 				<security:user name="admin" password="{noop}admin" authorities="ROLE_MEMBER, ROLE_ADMIN"/>
 			</security:user-service>
 		</security:authentication-provider>
+	-->
 	</security:authentication-manager>
 	
 	
