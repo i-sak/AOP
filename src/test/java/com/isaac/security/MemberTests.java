@@ -26,7 +26,7 @@ public class MemberTests {
 	private PasswordEncoder passwordEncoder;
 	@Setter(onMethod_ = @Autowired)
 	private DataSource ds;
-	
+	/*
 	@Test
 	public void testInsertMember () {
 		String sql ="insert into tb_member(userid, userpw, username) values (?,?,?)";
@@ -49,6 +49,38 @@ public class MemberTests {
 				} else {
 					pstmt.setString(1, "admin"+i);
 					pstmt.setString(3, "관리자"+i);
+				}
+				pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(pstmt != null) {try{pstmt.close();} catch(Exception e) {}}
+				if(con != null) {try {con.close();} catch(Exception e) {}}
+			}
+		} // end for
+	}
+	*/
+	@Test
+	public void testInsertAuth () {
+		String sql ="insert into tb_member_auth(userid, auth) values (?,?)";
+		
+		for (int i=0; i<100; i++) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			
+			try {
+				con = ds.getConnection();
+				pstmt = con.prepareStatement(sql);
+				
+				if(i<80) {
+					pstmt.setString(1, "user"+i);
+					pstmt.setString(2, "ROLE_USER");
+				} else if (i<90) {
+					pstmt.setString(1, "manager"+i);
+					pstmt.setString(2, "ROLE_MEMBER");
+				} else {
+					pstmt.setString(1, "admin"+i);
+					pstmt.setString(2, "ROLE_ADMIN");
 				}
 				pstmt.executeUpdate();
 			} catch (Exception e) {
