@@ -15,7 +15,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class CustomUserDetailsService implements UserDetailsService {
 
-	@Setter(onMethod_ = @Autowired)
+	@Setter(onMethod_ = {@Autowired})
 	private MemberMapper memberMapper;
 	
 	@Override
