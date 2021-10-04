@@ -30,6 +30,11 @@
 		<security:logout logout-url="/customLogout"
 		 	invalidate-session="true" delete-cookies="remember-me, JSESSION_ID"/>
 	</security:http>
+	<!-- 
+		CustomLoginSuccessHandler 를 사용하지 않고 SavedRequestAwareAuthenticationSuccessHandler를 이용하는 경우
+		bean id="CustomLoginSuccessHandler" 를 주석 처리하고, <security:form-login> 태그에 
+		속성 : authentication-success-handler-ref="customLoginSuccess" <- 이 부분을 제거한다.
+	 -->
 	
 	<security:authentication-manager>
 		<security:authentication-provider
